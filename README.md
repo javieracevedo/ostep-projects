@@ -6,7 +6,7 @@ This are my solutions to the projects of Operating Systems: Three Easy Pieces (O
 
 ### Initial Projects
 
-- [Unix Utilities](./initial-utilities)
+- [Unix utilities](./initial-utilities)
 
 ### Processes and Scheduling
 
