@@ -8,7 +8,7 @@ This are my solutions to the projects of Operating Systems: Three Easy Pieces (O
 
 - Unix utilities
   - [wcat](./initial-utilities/wcat): variant of the unix tool **cat**, reads a file and print it's content.
-  - [wgrep](./inital-utilities/wgrep): variant of the unix tool **grep**, searches in a file line by line the occurence of a search term and prints the line if its found.
+  - [wgrep](./initial-utilities/wgrep): variant of the unix tool **grep**, searches in a file line by line the occurence of a search term and prints the line if its found.
 
 ### Processes and Scheduling
 
