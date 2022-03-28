@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
 
   FILE *file;
   char character[2] = "";
-  char previous_line[2] = "";
+  char previous_character[2] = "";
   int char_occurrences = 0;
 
   for (int i=1; i < argc; i++) {
@@ -20,24 +20,21 @@ int main(int argc, char *argv[]) {
       exit(EXIT_FAILURE);
     }
 
-    int char_index;
-    char *cleaned_line;
-
     while (fread(&character, 1, 1, file)) {
-      if (strcmp(character, previous_line) == 0) {
+      if (strcmp(character, previous_character) == 0) {
         char_occurrences++;
       } else {
-        if (previous_line[0] != '\0') {
+        if (previous_character[0] != '\0') {
           fwrite(&char_occurrences, 4, 1, stdout);
-          fwrite(previous_line, 1, 1, stdout);
+          fwrite(previous_character, 1, 1, stdout);
         }
         char_occurrences = 1;
-        strcpy(previous_line, character);
+        strcpy(previous_character, character);
       }
     }
     fclose(file);
   }
 
   fwrite(&char_occurrences, 4, 1, stdout);
-  fwrite(previous_line, 1, 1, stdout);
+  fwrite(previous_character, 1, 1, stdout);
 }
