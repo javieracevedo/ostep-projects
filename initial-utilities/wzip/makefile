@@ -1,6 +1,6 @@
 SRCS = wzip.c
 
-TARG = wzip
+TARG = wzip.out
 
 CC = gcc
 
