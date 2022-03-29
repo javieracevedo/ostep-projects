@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 static int read_4_byte_binary(char *compressed_chunk) {
   int current_partial_int = compressed_chunk[3];
