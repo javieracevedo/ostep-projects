@@ -19,7 +19,7 @@ all:
 	$(MAKE) reverse wcat wgrep wunzip wzip
 
 clean:
-	rm  ${OBJS} ${TARGS}
+	rm -f ${OBJS} ${TARGS}
 
 reverse:
 	cd initial-utilities/reverse && make
