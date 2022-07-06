@@ -36,9 +36,9 @@ int main(int argc, char *argv[]) {
 
   size_t buffer_size = sizeof(char *);
   struct ListNode *linked_list_a_head = malloc(sizeof(struct ListNode));
-  struct ListNode *linked_list_a_tail = write_stream_to_ll(linked_list_a_head, input_stream, buffer_size);
+  linked_list_a_head = write_stream_to_ll(linked_list_a_head, input_stream, buffer_size);
   
-  reverse_write_ll_to_stream(output_stream, linked_list_a_tail);
+  write_ll_to_stream(output_stream, linked_list_a_head);
 
   fclose(input_stream);
   fclose(output_stream);
@@ -47,34 +47,26 @@ int main(int argc, char *argv[]) {
 
 struct ListNode *write_stream_to_ll(struct ListNode *head, FILE *stream, size_t buffer_size) {
   char *buffer = '\0';
-  struct ListNode *ll_current_node = head;
   ssize_t nread;
 
   while ((nread = getline(&buffer, &buffer_size, stream)) != -1) {
-    ll_current_node->data = strdup(buffer);
-    ll_current_node->data_length = nread;
-    ll_current_node->data[nread] = '\0';
-
     struct ListNode *newNode = malloc(sizeof(struct ListNode));
-    ll_current_node->next = newNode;
-    
-    struct ListNode *prevNode = ll_current_node;
-    ll_current_node = newNode;
-
-    ll_current_node->prev = prevNode;
+    newNode->data = strdup(buffer);
+    newNode->data[nread] = '\0';
+    newNode->next = head;
+    head = newNode; 
   }
-
   free(buffer);
-  return ll_current_node;
+  return head;
 }
 
-void reverse_write_ll_to_stream(FILE *stream, struct ListNode *ll_tail) {
-  struct ListNode *tmp = ll_tail;
+void write_ll_to_stream(FILE *stream, struct ListNode *ll_head) {
+  struct ListNode *tmp = ll_head;
   while (tmp != NULL) {
     if (tmp->data) {
       fwrite(tmp->data, sizeof(char), strlen(tmp->data), stream);
     }
-    tmp = tmp->prev;
+    tmp = tmp->next;
   }
 }
 
