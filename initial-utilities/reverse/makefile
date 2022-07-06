@@ -10,7 +10,7 @@ OTPS += -O
 OBJS = $(SRCS:.c=.o)
 
 $(TARG): $(OBJS)
-	$(CC) -o $(TARG) $(OPTS)  $(OBJS) 
+	$(CC) -o $(TARG) $(OPTS) $(OBJS) 
 
 clean:
 	rm -f $(OBJS) $(TARG)
