@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 
   size_t buffer_size = sizeof(char *);
   struct ListNode *linked_list_a_head = malloc(sizeof(struct ListNode));
-  linked_list_a_head = write_stream_to_ll(linked_list_a_head, input_stream, buffer_size);
+  write_stream_to_ll(&linked_list_a_head, input_stream, buffer_size);
   
   write_ll_to_stream(output_stream, linked_list_a_head);
 
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
   free_ll_nodes(linked_list_a_head);
 }
 
-struct ListNode *write_stream_to_ll(struct ListNode *head, FILE *stream, size_t buffer_size) {
+void write_stream_to_ll(struct ListNode **head, FILE *stream, size_t buffer_size) {
   char *buffer = '\0';
   ssize_t nread;
 
@@ -53,11 +53,10 @@ struct ListNode *write_stream_to_ll(struct ListNode *head, FILE *stream, size_t 
     struct ListNode *newNode = malloc(sizeof(struct ListNode));
     newNode->data = strdup(buffer);
     newNode->data[nread] = '\0';
-    newNode->next = head;
-    head = newNode; 
+    newNode->next = *head;
+    *head = newNode;
   }
   free(buffer);
-  return head;
 }
 
 void write_ll_to_stream(FILE *stream, struct ListNode *ll_head) {
