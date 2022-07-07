@@ -1,4 +1,4 @@
-SRCS = reverse.c
+SRCS = reverse.c linked_list_lib.c
 
 TARG = reverse.out
 
