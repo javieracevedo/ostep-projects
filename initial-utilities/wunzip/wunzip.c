@@ -13,7 +13,11 @@ static int read_4_byte_binary(char *compressed_chunk) {
 char *reverse_rle(char compressed_chunk[]) {
   char character = compressed_chunk[4];
   int character_count = read_4_byte_binary(compressed_chunk);
-  char *uncompressed_string = malloc(character_count + 1);
+  char *uncompressed_string;
+  if ((uncompressed_string = calloc(1, character_count + 1)) == NULL) {
+    fprintf(stderr, "malloc failed\n");
+    exit(EXIT_FAILURE);
+  };
   for (int i=0; i < character_count; i++)
     uncompressed_string[i] = character;
 
@@ -39,7 +43,9 @@ int main(int argc, char *argv[]) {
     while (fread(&compressed_chunk, 5, 1, file)) {
       char *uncompressed_string = reverse_rle(compressed_chunk);
       printf("%s", uncompressed_string);
+      free(uncompressed_string);
     }
+
     fclose(file);
   }
 }
