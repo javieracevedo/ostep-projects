@@ -9,13 +9,17 @@ void write_stream_to_ll(struct ListNode **head, FILE *stream, size_t buffer_size
   ssize_t nread;
 
   while ((nread = getline(&buffer, &buffer_size, stream)) != -1) {
-    struct ListNode *newNode = malloc(sizeof(struct ListNode));
+    struct ListNode *newNode;
+    if ((newNode = malloc(sizeof(struct ListNode))) == NULL) {
+      fprintf(stderr, "malloc failed\n");
+    }
     newNode->data = strdup(buffer);
     newNode->data[nread] = '\0';
     newNode->next = *head;
     *head = newNode;
   }
   free(buffer);
+  buffer = NULL;
 }
 
 void write_ll_to_stream(FILE *stream, struct ListNode *ll_head) {
@@ -26,14 +30,18 @@ void write_ll_to_stream(FILE *stream, struct ListNode *ll_head) {
     }
     tmp = tmp->next;
   }
+
+  free(tmp);
+  tmp = NULL;
 }
 
 void free_ll_nodes(struct ListNode* head) {
   struct ListNode* tmp;
-  while (!tmp) {
+  while (head != NULL) {
     tmp = head;
+    if (head && head->data != NULL) free(head->data);
     head = head->next;
-    if (head->data) free(head->data);
     free(tmp);
   }
+  tmp = NULL;
 }

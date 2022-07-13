@@ -34,12 +34,12 @@ int main(int argc, char *argv[]) {
   }
 
   size_t buffer_size = sizeof(char *);
-  struct ListNode *linked_list_a_head = malloc(sizeof(struct ListNode));
+  struct ListNode *linked_list_a_head = NULL;
   write_stream_to_ll(&linked_list_a_head, input_stream, buffer_size);
   
   write_ll_to_stream(output_stream, linked_list_a_head);
 
+  free_ll_nodes(linked_list_a_head);
   fclose(input_stream);
   fclose(output_stream);
-  free_ll_nodes(linked_list_a_head);
 }
