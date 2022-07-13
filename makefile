@@ -1,13 +1,12 @@
 OPTS = -Wall -g
 OTPS += -O
-
 CC = gcc
+
+ROOT_DIRECTORY = ./initial-utilities
+DIRS := ${shell find ./initial-utilities -maxdepth 1}
 
 all:
 	$(MAKE) reverse wcat wgrep wunzip wzip
-
-clean:
-	./clean_binaries.sh
 
 reverse:
 	cd initial-utilities/reverse && make
@@ -23,3 +22,9 @@ wunzip:
 
 wzip:
 	cd initial-utilities/wzip && make
+
+
+.PHONY : clean
+clean:
+	$(foreach dir, ${DIRS}, rm -fv $(dir)/*.out)
+	$(foreach dir, ${DIRS}, rm -fv $(dir)/*.o)
