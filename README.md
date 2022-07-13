@@ -1,6 +1,6 @@
 # OSTEP Projects
 
-This are my solutions to the projects of Operating Systems: Three Easy Pieces (OSTEP)
+This are my solutions to the [projects](https://github.com/remzi-arpacidusseau/ostep-projects) of Operating Systems: Three Easy Pieces (OSTEP)
 
 # C/Linux Projects
 
