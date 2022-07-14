@@ -27,6 +27,8 @@ The file's text should be sorted line by line. Read one line, sort it by charact
 
 **Start with a simple sorting algorithm**, regardless of it being slow. If motivated, try to implement more efficient sorting algoritms. Make sure you understand how the given sorting algorithm works before trying to implement it.
 
+**Memcheck**, use valgrind's memcheck along the way, to check for pottentially memory issues.
+
 **Testing**, TODO
 
 
