@@ -14,6 +14,7 @@ This are my solutions to the [projects](https://github.com/remzi-arpacidusseau/o
 
 - **Others**
   - [reverse](./initial-utilities/reverse): reverses a file and writes it back to another file or stdout.
+  - [sort-text](./initial-utilities/sort-text): sorts all lines in a stream, character by character and prints out the result to stdout or a file.
 
 ### Processes and Scheduling
 
