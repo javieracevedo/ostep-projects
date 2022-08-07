@@ -28,7 +28,7 @@ The file's text should be sorted line by line. Read one line, sort it by charact
 
 **Memcheck**, use valgrind's memcheck along the way, to check for pottentially memory issues.
 
-**Testing**, It is extremly helpful and a good practice to test your code while you write it. It can potentially help you catch bugs early on and it makes refactoring the code easier, in case you want to improve it. It also helps you organize your ideas in terms of how the code should work. It makes you think how let's say a function should be used and what it should return. For testing a small program like this I recommend [Minunit](http://pantras.free.fr/articles/minunit.html), but you can use anything you want ofcourse.
+**Testing**, For testing a small program like this I recommend [Minunit](http://pantras.free.fr/articles/minunit.html), but you can use anything you want ofcourse.
 
 # Potentially Useful Routines and Frameworks
 
