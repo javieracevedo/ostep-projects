@@ -1,16 +1,14 @@
-TEST_TARGET = tests.c
 SRCS = sort-text.c
-TARGS = $(SRCS:.c:.o)
+TARG = sort-text.out
+OBJS = $(SRCS:.c=.o)
 CC = gcc
-OPTS = -Wall -g -O
-LIBS = -I.
+OPTS = -Wall -g -O0
 
-sort-text:
-	$(CC) $(OPTS) $(SRCS) $(LIBS) -o sort-text.o
-
-test:
-	$(CC) $(OPTS) $(TEST_TARGET) $(LIBS) -o tests.o
-
+$(TARG): $(OBJS)
+	$(CC) $(SRCS) -o $(TARG) $(OPTS)
 
 clean:
-	rm -f sort-text tests.o
+	rm -f $(TARGS)
+
+depend:
+	makedepend $(SRCS)
