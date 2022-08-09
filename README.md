@@ -10,7 +10,7 @@ This are my solutions to the [projects](https://github.com/remzi-arpacidusseau/o
   - [wcat](./initial-utilities/wcat): variant of the unix tool **cat**, reads a file and print it's content.
   - [wgrep](./initial-utilities/wgrep): variant of the unix tool **grep**, searches in a file line by line the occurence of a search term and prints the line if its found.
   - [wzip](./initial-utilities/wzip): compresses a text file using the RLE compression algorithm.
-  - [wunzip](./initial-utilities/wunzip): uncompresses text files compressed with the RLE compression algorithm.
+  - [wunzip](./initial-utilities/wunzip): uncompresses text files compressed with the RLE compression algorithm.****
 
 - **Others**
   - [reverse](./initial-utilities/reverse): reverses a file and writes it back to another file or stdout.
@@ -18,7 +18,7 @@ This are my solutions to the [projects](https://github.com/remzi-arpacidusseau/o
 
 ### Processes and Scheduling
 
-- TODO
+- [shell](./processes-and-scheduling/shell): simple shell (called wish) written in C.
 
 ### Concurrency
 
