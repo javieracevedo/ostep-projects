@@ -6,8 +6,9 @@
 
 typedef struct CommandLineInput {
   char *command;
-  int argc; // TODO: not sure if I'll be needing this or not
+  int argc;
   char *args;
+  char *argv[100];
   int empty;
 } CommandLineInput;
 
@@ -22,6 +23,18 @@ CommandLineInput *parse_command_line(char *command_line, size_t nread) {
   command_line_input->command = strsep(&command_line, " "); // TODO: this eventually will need to handle operators like >
   command_line_input->args = command_line;
 
+  int idx = 0;
+  while (command_line != NULL) {
+    char *token = strsep(&command_line, " ");
+    command_line_input->argv[idx] = malloc(sizeof(char *));
+    command_line_input->argv[idx] = token;
+    idx++;
+  }
+
+  if (command_line_input->argv[0] != NULL) {
+    printf("%s\n", command_line_input->argv[0]);
+  }
+
   return command_line_input;
 }
 
@@ -31,8 +44,7 @@ int main(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  char *path;
-
+  char *path = "/bin";
   // Built In Commands Names
   char *EXIT_COMMAND = "exit";
   char *CD_COMMAND = "cd";
@@ -60,6 +72,39 @@ int main(int argc, char *argv[]) {
     } else if (strcmp(command_line_input->command, PATH_COMMAND) == 0) {
       path = command_line_input->args;
       printf("%s\n", path);
+    } else {
+      if (path[0] != '\0') { // TODO: consider removing this
+        char *path_copy = strdup(path);
+
+        char *token;
+        char *command_path = "\0";
+
+        while (path_copy != NULL && command_path[0] == '\0') {
+          token = strsep(&path_copy, " ");
+
+          char *possible_command_path = strdup(token);
+          strcat(possible_command_path, "/");
+          strcat(possible_command_path, command_line_input->command);
+
+          if (access(possible_command_path, X_OK) == 0) {
+            command_path = strdup(possible_command_path);
+          }
+        }
+
+        if (command_path[0] == '\0') {
+          fprintf(stderr, "wish: could not find %s command\n", command_line_input->command);
+        } else {
+          char *newargv[] = { };
+          char *newenviron[] = { NULL };
+
+          int error;
+          if ((error = execv(command_path, newargv)) != 0) {
+            perror("wish: An error has ocurred");
+          }
+        }
+      } else {
+        printf("wish: path is not set");
+      }
     }
   }
 }
