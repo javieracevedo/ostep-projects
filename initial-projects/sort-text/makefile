@@ -8,7 +8,7 @@ $(TARG): $(OBJS)
 	$(CC) $(SRCS) -o $(TARG) $(OPTS)
 
 clean:
-	rm -f $(TARGS)
+	rm -f $(TARG)
 
 depend:
 	makedepend $(SRCS)
