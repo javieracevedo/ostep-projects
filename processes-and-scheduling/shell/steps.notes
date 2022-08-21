@@ -1,0 +1,35 @@
+# Main Logic
+  # Interactive Mode
+    "Create an interactive mode, where the program continuously propmts the user to type in commands by reading from stdin and print back the result to sdout"
+      - The shell should parse the command taken from input, find the binary of the command in the path directories (if not built-in) and create a new process for the binary.
+        Finally it should print the result of each command
+          - If the command cannot be found it should print an error and propmt again
+      - If the command is built in, no new process needs to be created.
+      - The shell should be killed when user types `exit` (exit is a built in command) or EOF is reached.
+
+    # Built in commands
+      - exit: call exit()
+      - cd: call chdir()
+      - path: takes 0 or more arguments separated by space. Adds those arguments to the path list
+
+  # Batch Mode
+    "Create a batch mode, where the user calls the shell with a file as the first argument that contains a list of commands to be executed, the shell should execute them"
+      and print out the result.
+      - The shell should parse the command taken from the file, find the binary of the command in the path directories (if not built-in) and create a new process for the binary.
+        Finally it should print the result of each command
+          - If the command is built in, just invoke to appropiate implementation and print the result
+          - If it is not a built-in command, find the command's binary, execute it and print the result
+          - If the command cannot be found it should print an error and exit
+      - Shell shoud exit when EOF is reached and I guess if exit() is called from the file as well
+
+# Useful routines
+  - For reading the commands use getline()
+  - For parsing the commands string you can use strsep()
+  - To execute a command look into fork(), exec(), and wait()/waitpid()
+  - Specifically use execv(), you cannot use system()
+  - Consider using the access() system call to find the executable path
+
+
+# Details
+  - It can only take no arguments or one argument. Anything else is an error.
+  - The user should set the PATH variable, the initial path should contain /bin
