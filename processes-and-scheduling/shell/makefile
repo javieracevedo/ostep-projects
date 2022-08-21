@@ -1,19 +1,14 @@
 SRCS = wish.c
-
 TARG = wish.out
-
-CC = gcc
-
-OPTS = -Wall
-OTPS += -O0
-
 OBJS = $(SRCS:.c=.o)
+CC = gcc
+OPTS = -Wall -ggdb -O0
 
 $(TARG): $(OBJS)
-	$(CC) -o $(TARG) $(OPTS) $(OBJS) 
+	$(CC) $(SRCS) -o $(TARG) $(OPTS)
 
 clean:
-	rm -f $(OBJS) $(TARG)
+	rm -f $(TARG)
 
 depend:
 	makedepend  $(SRCS)
