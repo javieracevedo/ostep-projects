@@ -7,104 +7,194 @@
 typedef struct CommandLineInput {
   char *command;
   int argc;
-  char *args;
-  char *argv[100];
-  int empty;
+  char **argv;
 } CommandLineInput;
 
 
-CommandLineInput *parse_command_line(char *command_line, size_t nread) {
-  struct CommandLineInput *command_line_input;
-  if ((command_line_input = malloc(sizeof(struct CommandLineInput))) == NULL) {
-    fprintf(stderr, "creation of CommandLineInput struct failed\n");
+// CommandLineInput *parse_command_line(char *command_line, size_t nread) {
+//   // basically, if command line is empty (meaning it only has a line feed character and a null character)
+//   // return empty command line input struct
+//   if (nread <= 1) {
+//     return NULL;
+//   }
+
+//   struct CommandLineInput *command_line_input;
+//   if ((command_line_input = malloc(sizeof(struct CommandLineInput))) == NULL) {
+//     fprintf(stderr, "creation of CommandLineInput struct failed\n");
+//   }
+
+//   command_line[nread - 1] = '\0'; // get rid of the \n special character
+
+//   int idx = 0;
+//   // TODO: test if we need to do sizeof(char *) * the amount of strings I'll hold
+//   command_line_input->argv = malloc(sizeof(char *));
+//   while (command_line != NULL) {
+//     char *token = strsep(&command_line, " ");
+//     command_line_input->argv[idx] = malloc(sizeof(char *));
+//     if (command_line_input->argv[idx] == NULL) {
+//       // TODO: should we avoid printing the error and exiting here?
+//       // should we handle this like C functions handle this, by maybe returning NULL and setting errno
+//       fprintf(stderr, "malloc failed while parsing token: %s\n", token);
+//       exit(EXIT_FAILURE);
+//     }
+//     command_line_input->argv[idx] = token;
+//     idx++;
+//   }
+//   command_line_input->argc = idx;
+//   command_line_input->command = command_line_input->argv[0];
+
+//   return command_line_input;
+// }
+
+// Built In Commands Names
+
+// char *EXIT_COMMAND = "exit";
+// char *CD_COMMAND = "cd";
+// char *PATH_COMMAND = "path";
+char **path = NULL;
+int path_length = 8;
+
+
+// void handle_built_in_command(char *command, int argc, char **argv) {
+//   if (strcmp(command, EXIT_COMMAND) == 0) {
+//     if (argc > 1) {
+//       fprintf(stderr, "exit: too many arguments\n");
+//     }
+//     exit(EXIT_FAILURE);
+//   } else if (strcmp(command, CD_COMMAND) == 0) {
+//     if (argc > 2) {
+//       fprintf(stderr, "cd: too many arguments\n");
+//     } else if (chdir(argv[1]) == -1) {
+//       fprintf(stderr, "An error has ocurred\n");
+//     }
+//   } else if (strcmp(command, PATH_COMMAND) == 0) {
+//     // TODO: we probably will need to check if resizing path is necessary
+//     // TODO: check for memory issues
+//     // TODO: maybe create a function  set_path.
+//     for (int i=1; i<argc; i++) {
+//       path[i] = malloc(sizeof(char *));
+//       path[i] = argv[i];
+//     }
+
+//     for (int j=0; j<argc; j++) {
+//       printf("%s\n", path[j]);
+//     }
+//   }
+// }
+
+// TODO: is there a better way to do this?
+int get_array_len(char **array) {
+  int current_idx = 0;
+  char *current_item = array[current_idx];
+  while (current_item != NULL) {
+    current_item = array[current_idx];
+    if (current_item) current_idx++;
   }
-
-  command_line[nread - 1] = '\0'; // get read of the \n special character
-  command_line_input->command = strsep(&command_line, " "); // TODO: this eventually will need to handle operators like >
-  command_line_input->args = command_line;
-
-  int idx = 0;
-  while (command_line != NULL) {
-    char *token = strsep(&command_line, " ");
-    command_line_input->argv[idx] = malloc(sizeof(char *));
-    command_line_input->argv[idx] = token;
-    idx++;
-  }
-
-  if (command_line_input->argv[0] != NULL) {
-    printf("%s\n", command_line_input->argv[0]);
-  }
-
-  return command_line_input;
+  return current_idx;
 }
 
-int main(int argc, char *argv[]) {
-  if (argc > 2) {
-    fprintf(stderr, "usage: wish <batch.txt> or wish\n");
-    exit(EXIT_FAILURE);
+void add_path_entry(char *entry) {
+  if (!path) {
+    path = calloc(path_length, sizeof(char *));
   }
 
-  char *path = "/bin";
-  // Built In Commands Names
-  char *EXIT_COMMAND = "exit";
-  char *CD_COMMAND = "cd";
-  char *PATH_COMMAND = "path";
-
-  char *command_line = NULL;
-  size_t command_line_buf_size = 0;
-  
-  int running = 1;
-  while (running) {
-    system("pwd");
-
-    size_t nread = getline(&command_line, &command_line_buf_size, stdin);
-    CommandLineInput *command_line_input = parse_command_line(command_line, nread);
-
-    if (strcmp(command_line_input->command, EXIT_COMMAND) == 0) {
-      if (!command_line_input->args) {
-        exit(EXIT_FAILURE);
-      } 
-      fprintf(stderr, "exit: too many arguments\n");
-    } else if (strcmp(command_line_input->command, CD_COMMAND) == 0) {
-      if (chdir(command_line_input->args) == -1) {
-        fprintf(stderr, "An error has ocurred\n");
-      }
-    } else if (strcmp(command_line_input->command, PATH_COMMAND) == 0) {
-      path = command_line_input->args;
-      printf("%s\n", path);
-    } else {
-      if (path[0] != '\0') { // TODO: consider removing this
-        char *path_copy = strdup(path);
-
-        char *token;
-        char *command_path = "\0";
-
-        while (path_copy != NULL && command_path[0] == '\0') {
-          token = strsep(&path_copy, " ");
-
-          char *possible_command_path = strdup(token);
-          strcat(possible_command_path, "/");
-          strcat(possible_command_path, command_line_input->command);
-
-          if (access(possible_command_path, X_OK) == 0) {
-            command_path = strdup(possible_command_path);
-          }
-        }
-
-        if (command_path[0] == '\0') {
-          fprintf(stderr, "wish: could not find %s command\n", command_line_input->command);
-        } else {
-          char *newargv[] = { };
-          char *newenviron[] = { NULL };
-
-          int error;
-          if ((error = execv(command_path, newargv)) != 0) {
-            perror("wish: An error has ocurred");
-          }
-        }
-      } else {
-        printf("wish: path is not set");
-      }
+  if (get_array_len(path) >= path_length) {
+    char **new_path;
+    if ((new_path = realloc(path, (path_length * 2) * sizeof(char *))) == NULL) {
+      fprintf(stderr, "realloc failed");
+      exit(EXIT_FAILURE);
     }
+    path = new_path;
+    path_length = path_length * 2;
   }
+  // TODO: also, should we check if re-alloc is needed?
+
+  int path_len = get_array_len(path);
+  printf("path_len: %d\n", path_len);
+  path[path_len] = entry;
+  // path[path_len + 1] = NULL;
+}
+
+// void handle_system_command(char *command) {
+//   if (path[0] != "\0") { // TODO: consider removing this
+//     char *path_copy = strdup(path);
+
+//     char *token;
+//     char *command_path = "\0";
+
+//     while (path_copy != NULL && command_path[0] == '\0') {
+//       token = strsep(&path_copy, " ");
+
+//       char *possible_command_path = strdup(token);
+//       strcat(possible_command_path, "/");
+//       strcat(possible_command_path, command);
+
+//       if (access(possible_command_path, X_OK) == 0) {
+//         command_path = strdup(possible_command_path);
+//       }
+//     }
+
+//     if (command_path[0] == '\0') {
+//       fprintf(stderr, "wish: could not find %s command\n", command);
+//     } else {
+//       char *newargv[] = { };
+//       // char *newenviron[] = { NULL };
+
+//       int error;
+//       if ((error = execv(command_path, newargv)) != 0) {
+//         perror("wish: an error has ocurred");
+//       }
+//     }
+//   } else {
+//     printf("wish: path is not set");
+//   }
+// }
+
+// int is_built_in_command(char *command) {
+//   return strcmp(command, EXIT_COMMAND) == 0 || strcmp(command, CD_COMMAND) == 0 || strcmp(command, PATH_COMMAND) == 0;
+// }
+
+int main(int argc, char *argv[]) {
+  // path = malloc(sizeof(char *) * 100);
+  add_path_entry("1");
+  add_path_entry("2");
+  add_path_entry("3");
+  add_path_entry("4");
+  add_path_entry("5");
+  add_path_entry("6");
+  add_path_entry("7");
+  add_path_entry("8");
+  add_path_entry("9");
+
+  // for (int i=0; i<get_array_len(path); i++) {
+  //   printf("%s\n", path[i]);
+  // }
+
+  free(path);
+  // free_path_entries();
+
+  // if (argc > 2) {
+  //   fprintf(stderr, "usage: wish <batch.txt> or wish\n");
+  //   exit(EXIT_FAILURE);
+  // }
+
+  // char *command_line = NULL;
+  // size_t command_line_buf_size = 0;
+  
+  // int running = 1;
+  // while (running) {
+  //   system("pwd");
+
+  //   size_t nread = getline(&command_line, &command_line_buf_size, stdin);
+  //   CommandLineInput *command_line_input = parse_command_line(command_line, nread);
+
+  //   if (command_line_input != NULL) {
+  //     if (is_built_in_command(command_line_input->command)) {
+  //       handle_built_in_command(command_line_input->command, command_line_input->argc, command_line_input->argv);
+  //     } else {
+  //       // TODO: handle system command
+  //       // handle_system_command(command_line_input->command);
+  //     }
+  //   }
+  // }
 }
