@@ -52,7 +52,7 @@ typedef struct CommandLineInput {
 // char *CD_COMMAND = "cd";
 // char *PATH_COMMAND = "path";
 char **path = NULL;
-int path_length = 8;
+int path_length = 1;
 
 
 // void handle_built_in_command(char *command, int argc, char **argv) {
@@ -93,26 +93,32 @@ int get_array_len(char **array) {
   return current_idx;
 }
 
-void add_path_entry(char *entry) {
+void add_path_entry(char *entry, int path_len) {
   if (!path) {
-    path = calloc(path_length, sizeof(char *));
+    // Consider locating the + 1 somewhere else. Place it where it retter indicates the     // need of an extra null character.        
+    path = calloc(path_length + 1, sizeof(char *));
+    if (!path) {
+      fprintf(stderr, "calloc failed");
+      exit(EXIT_FAILURE);
+    }
+    //if ((path = calloc(path_length + 1, sizeof(char *))) == NULL) {
+	//  fprintf(stderr, "calloc failed");
+    //  exit(EXIT_FAILURE);
+    //}
   }
 
-  if (get_array_len(path) >= path_length) {
+  //int path_len = get_array_len(path);
+  if (path_len >= path_length) {
     char **new_path;
-    if ((new_path = realloc(path, (path_length * 2) * sizeof(char *))) == NULL) {
+    if ((new_path = realloc(path, ((path_length * 2) + 1) * sizeof(char *))) == NULL) {
       fprintf(stderr, "realloc failed");
       exit(EXIT_FAILURE);
     }
     path = new_path;
-    path_length = path_length * 2;
+    path_length = (path_length * 2) + 1;
   }
   // TODO: also, should we check if re-alloc is needed?
-
-  int path_len = get_array_len(path);
-  printf("path_len: %d\n", path_len);
   path[path_len] = entry;
-  // path[path_len + 1] = NULL;
 }
 
 // void handle_system_command(char *command) {
@@ -155,16 +161,18 @@ void add_path_entry(char *entry) {
 // }
 
 int main(int argc, char *argv[]) {
-  // path = malloc(sizeof(char *) * 100);
-  add_path_entry("1");
-  add_path_entry("2");
-  add_path_entry("3");
-  add_path_entry("4");
-  add_path_entry("5");
-  add_path_entry("6");
-  add_path_entry("7");
-  add_path_entry("8");
-  add_path_entry("9");
+  //int path_len = get_array_len(path);
+  // TODO: modify add_path_entry so it takes a char** path, current path len and entry
+  // TODO: consider getting rid of current path len, and use the NULL at the end to kno
+  // if you need to resize?
+  add_path_entry("2", 0);
+  add_path_entry("3", 1);
+  add_path_entry("4", 2);
+  add_path_entry("5", 3);
+  add_path_entry("6", 4);
+  add_path_entry("7", 5);
+  add_path_entry("8", 6);
+  add_path_entry("9", 7);
 
   // for (int i=0; i<get_array_len(path); i++) {
   //   printf("%s\n", path[i]);
