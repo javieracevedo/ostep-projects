@@ -55,7 +55,7 @@ char **path = NULL;
 int path_length = 1;
 
 
-// void handle_built_in_command(char *command, int argc, char **argv) {
+//void handle_built_in_command(char *command, int argc, char **argv) {
 //   if (strcmp(command, EXIT_COMMAND) == 0) {
 //     if (argc > 1) {
 //       fprintf(stderr, "exit: too many arguments\n");
@@ -92,6 +92,41 @@ int get_array_len(char **array) {
   }
   return current_idx;
 }
+
+int str_array_length(char **array) {
+  if (!array) return 0;
+
+  int current_element_idx = 0;
+  char *current_element;
+  while ((current_element = array[current_element_idx]) != NULL) {
+    current_element_idx++;
+  }
+
+  return current_element_idx;
+}
+
+void str_array_push(char **array, char *new_element, int *buffer_size) {
+  int array_length = str_array_length(array); // We could avoid this by somehow keeping track of the elements added to the array each time.
+  if (array_length >= *buffer_size - 1) {
+    // TODO: realloc array, do we need to derreference array here or not?
+    *buffer_size = *buffer_size * 2;
+    if ((array = realloc(array, *buffer_size * sizeof(char *))) == NULL) {
+      fprintf(stderr, "realloc failed");
+      exit(EXIT_FAILURE);
+    }
+  }
+  array[array_length] = new_element;
+}
+
+//void add_path_entry(char **path, char *new_entry, int *buffer_size) {
+  // TODO
+//  if (!path) {
+//    if ((path = calloc(path_length + 1, sizeof(char *))) == NULL) {
+//      fprintf(stderr, "calloc failed");
+//      exit(EXIT_FAILURE);
+//    }
+//  }
+//}
 
 void add_path_entry(char *entry, int path_len) {
   if (!path) {
@@ -162,23 +197,41 @@ void add_path_entry(char *entry, int path_len) {
 
 int main(int argc, char *argv[]) {
   //int path_len = get_array_len(path);
-  // TODO: modify add_path_entry so it takes a char** path, current path len and entry
+  // TODO: modify add_path_entry so it takes a char** path, int** buffer_size, char* en  // try
   // TODO: consider getting rid of current path len, and use the NULL at the end to kno
   // if you need to resize?
-  add_path_entry("2", 0);
-  add_path_entry("3", 1);
-  add_path_entry("4", 2);
-  add_path_entry("5", 3);
-  add_path_entry("6", 4);
-  add_path_entry("7", 5);
-  add_path_entry("8", 6);
-  add_path_entry("9", 7);
+  char *item = "item";
+  char **str_test = calloc(100, sizeof(char *));
+  int buffer_size = 2;
+  str_test[0] = "1";
+  str_array_push(str_test, "2", &buffer_size);
+  str_array_push(str_test, "3", &buffer_size);
+  //void str_array_push(char **array, char *new_element, int *buffer_size) {
+ 
+  
+
+  //str_test[1] = "item 2";
+  //str_test[2] = "item 3";
+  //str_test[3] = "item 4";
+  //str_test[4] = "item 5";
+  //str_test[5] = "item 6";
+  printf("str len: %d", str_array_length(str_test));
+
+   free(str_test);
+  //add_path_entry("2", 0);
+  //add_path_entry("3", 1);
+  //add_path_entry("4", 2);
+  //add_path_entry("5", 3);
+  //add_path_entry("6", 4);
+  //add_path_entry("7", 5);
+  //add_path_entry("8", 6);
+  //add_path_entry("9", 7);
 
   // for (int i=0; i<get_array_len(path); i++) {
   //   printf("%s\n", path[i]);
   // }
 
-  free(path);
+  //free(path);
   // free_path_entries();
 
   // if (argc > 2) {
@@ -204,5 +257,5 @@ int main(int argc, char *argv[]) {
   //       // handle_system_command(command_line_input->command);
   //     }
   //   }
-  // }
 }
+
