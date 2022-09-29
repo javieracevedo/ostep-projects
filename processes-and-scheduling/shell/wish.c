@@ -5,11 +5,14 @@
 #include <errno.h>
 #include "array_lib.h"
 #include <sys/wait.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 struct CommandLineInput {
   char *command;
   int argc;
   char **argv;
+  char *redirectFileName;
 };
 
 
@@ -41,8 +44,14 @@ struct CommandLineInput parse_command_line(char *command_line, size_t command_li
   command_line_input.argv = calloc(100, sizeof(char *));
   while (command_line != NULL) {
     char *token = strsep(&command_line, " ");
-    command_line_input.argv[count] = token;
-    count++;
+    // TODO: Maybe to avoid breaking here, we could divide the parser in 2, one for the LHS and one for the RHS?
+    if (strcmp(token, ">") == 0) {
+      command_line_input.redirectFileName = strsep(&command_line, " "); // TODO: maybe we should check if this fails or returns an empty string?
+      break;
+    } else {
+      command_line_input.argv[count] = token;
+      count++;
+    }
   }
   command_line_input.argv[count] = NULL;
   command_line_input.argc = count;
@@ -121,7 +130,7 @@ void handle_built_in_command(char *command, int argc, char **argv) {
   }
 }
 
-void handle_system_command(char *command, char **argv) {
+void handle_system_command(char *command, char **argv, char *redirectFileName) {
   if (search_path != NULL || search_path[0] != 0) { // TODO: consider removing this
     char *path_copy = strdup(search_path);
 
@@ -135,7 +144,6 @@ void handle_system_command(char *command, char **argv) {
       strcat(possible_command_path, "/");
       strcat(possible_command_path, command);
 
-      // TODO: check why access is not finding my custom programs
       if (access(possible_command_path, X_OK) == 0) {
         command_path = strdup(possible_command_path);
       }
@@ -151,6 +159,17 @@ void handle_system_command(char *command, char **argv) {
       }
 
       if (pid == 0) {
+        if (redirectFileName) {
+          // TODO: difference between opening a file descriptor and opening a file.
+          int fd = open(redirectFileName, O_WRONLY | O_TRUNC);
+          if (fd < 0) {
+            perror("wish: an error has ocurred");
+          }
+          dup2(fd, 1);
+          dup2(fd, 2);
+          close(fd);
+        }
+
         int error;
         if ((error = execv(command_path, argv)) != 0) {
           perror("wish: an error has ocurred");
@@ -165,10 +184,6 @@ void handle_system_command(char *command, char **argv) {
 }
 
 int main(int argc, char *argv[]) {
-  // for (int i=0; __environ[i]; i++) {
-  //   printf("%s\n", __environ[i]);
-  // }
-  // exit(0);
   add_path_entry(&search_path, "/bin", &path_buffer_size);
 
   if (argc > 2) {
@@ -180,7 +195,8 @@ int main(int argc, char *argv[]) {
   char *command_line = NULL;
   size_t command_line_buf_size = 100;
   struct CommandLineInput command_line_input;
-
+  
+  system("clear");
   while (1) {
     system("pwd");
 
@@ -202,7 +218,7 @@ int main(int argc, char *argv[]) {
        
       } else {
         // TODO: handle system command
-        handle_system_command(command_line_input.command, command_line_input.argv);
+        handle_system_command(command_line_input.command, command_line_input.argv, command_line_input.redirectFileName);
       }
 
       free(command_line_input.argv);
@@ -210,4 +226,3 @@ int main(int argc, char *argv[]) {
     }
   }
 }
-
