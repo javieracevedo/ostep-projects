@@ -1,4 +1,4 @@
-SRCS = wish.c array_lib.c
+SRCS = wish.c cli_parser.c built_in_commands.c
 TARG = wish.out
 OBJS = $(SRCS:.c=.o)
 CC = gcc
