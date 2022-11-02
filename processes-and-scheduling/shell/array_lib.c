@@ -3,7 +3,8 @@
 #include "array_lib.h"
 #include <string.h>
 
-int get_array_length(char **array) {
+
+int get_array_length(void **array) {
   int count = 0;
   while (*array != NULL) {
     array++;
@@ -13,6 +14,7 @@ int get_array_length(char **array) {
 
   return count;
 }
+
 
 // TODO: wrap array in a struct and keep track of the non null elements of the array
 // and resize (realloc) when the array is full. This would help us get rid of checking

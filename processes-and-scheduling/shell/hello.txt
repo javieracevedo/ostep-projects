@@ -1,0 +1,18 @@
+total 108
+drwxr-xr-x 2 javier javier  4096 Oct  9 14:13 .
+drwxr-xr-x 3 javier javier  4096 Aug 20 23:30 ..
+-rw-r--r-- 1 javier javier  1056 Sep 10 23:50 array_lib.c
+-rw-r--r-- 1 javier javier   301 Sep 10 19:53 array_lib.h
+-rw-r--r-- 1 javier javier  1961 Oct  3 14:40 built_in_commands.c
+-rw-r--r-- 1 javier javier   278 Oct  3 14:28 built_in_commands.h
+-rw-r--r-- 1 javier javier  4256 Oct  3 14:40 built_in_commands.o
+-rw-r--r-- 1 javier javier  2870 Oct  9 14:09 cli_parser.c
+-rw-r--r-- 1 javier javier   313 Oct  6 22:02 cli_parser.h
+-rw-r--r-- 1 javier javier  3624 Oct  9 14:10 cli_parser.o
+-rw-r--r-- 1 javier javier     0 Oct  9 14:13 hello.txt
+-rw-r--r-- 1 javier javier   220 Oct  3 14:31 makefile
+-rw-r--r-- 1 javier javier  2189 Aug 21 01:33 steps.notes
+-rw-r--r-- 1 javier javier   121 Aug 21 01:33 test-wish.sh
+-rw-r--r-- 1 javier javier  3757 Oct  9 14:13 wish.c
+-rw-r--r-- 1 javier javier  5456 Oct  9 14:13 wish.o
+-rwxr-xr-x 1 javier javier 36960 Oct  9 14:13 wish.out
