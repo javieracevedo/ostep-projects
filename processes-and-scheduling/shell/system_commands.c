@@ -57,7 +57,6 @@ void handle_system_command(char *command, char **argv, char *redirectFileName) {
 
 void execute_commands(CommandLineInput *commands, int length) {
   int pid = -1;
-  printf("%d \n", length);
   for (int i=0; i<length; i++) {
     // Fork again, only if process is the parent (pid != 0)
     if (pid != 0) {
@@ -67,12 +66,8 @@ void execute_commands(CommandLineInput *commands, int length) {
       if (pid == 0) {
         handle_system_command(commands[i].command, commands[i].argv, commands[i].redirectFileName);
       }
-
-      // if (i == length - 1) {
-      //   printf("HERE \n");
-      //   // wait(NULL);
-      // }
     }
   }
-  waitpid(-1, NULL, 1);
+
+  while (wait(NULL) != -1);
 }

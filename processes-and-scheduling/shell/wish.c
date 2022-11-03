@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
   size_t command_line_buf_size = 100;
   struct CommandLineInput* commands;
   
-  // system("clear")  ;
+  system("clear");
   while (1) {
     system("pwd");
 
@@ -38,29 +38,30 @@ int main(int argc, char *argv[]) {
     // TODO: maybe just pass the command_line and make the parse function handle empty strings. 
     commands = parse_command_line(command_line, nread);
 
-    int commands_count = command_line_input_struct_array_length(commands);
-    execute_commands(commands, commands_count);
+    // TODO: check when there are no commands present (return with empty line)
 
+    // TODO: We could have a single module called "commands" that handles both system calls to execute system commands and
+    // built in commands. So we can execute built-in commands in parallel, together with system commands.
+    if (strcmp(commands[0].command, CD_COMMAND) == 0 || strcmp(commands[0].command, PATH_COMMAND) == 0) {
+        handle_built_in_command(commands[0].command, commands[0].argc, commands[0].argv);
+    } else if (strcmp( commands[0].command, EXIT_COMMAND) == 0) { 
+      // TODO: handle ctrl+c and ctrl+d
+      // TODO: is there a way to always ensure we exit trough here (or a single place), so we can free
+      // everything we need to free and avoid memory leaks?
+      if (commands[0].argc <= 1) {
+        free(command_line);
+        free(commands[0].argv);
+        free(search_path);
+        exit(EXIT_FAILURE);
+      }
 
-  //   for (int i=0; i<=get_array_length(commands); i++) {
-  //     if (strcmp(commands[i].command, CD_COMMAND) == 0 || strcmp(commands[i].command, PATH_COMMAND) == 0) {
-  //       handle_built_in_command(commands[i].command, commands[i].argc, commands[i].argv);
-  //     } else if (strcmp( commands[i].command, EXIT_COMMAND) == 0) { // TODO: handle ctrl+c and ctrl+d
-  //       if (commands[i].argc <= 1) {
-  //         free(command_line);
-  //         free(commands[i].argv);
-  //         free(search_path);
-  //         exit(EXIT_FAILURE);
-  //       }
+      fprintf(stderr, "exit: too many arguments\n");
+    } else {
+      int commands_count = command_line_input_struct_array_length(commands);
+      execute_commands(commands, commands_count); 
+    }
+    
 
-  //       fprintf(stderr, "exit: too many arguments\n");
-       
-  //     } else {
-  //       handle_system_command(commands[i].command, commands[i].argv, commands[i].redirectFileName);
-  //     }
-
-  //     free(commands[i].argv);
-  //     // free(command_line_input);
-  //   }
+    free(commands[0].argv); 
   }
 }
