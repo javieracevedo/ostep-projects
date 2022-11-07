@@ -46,7 +46,7 @@ struct CommandLineInput* parse_command_line(char *command_line, size_t command_l
     commands[count] = command;
     count++;
   }
-  commands[count] = '\0';
+  commands[count] = NULL;
 
   // TODO: check the initialization of this, shouldn't this have count amount of structs?
   parsed_commands = calloc(count, sizeof(struct CommandLineInput));
