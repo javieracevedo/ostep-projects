@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/wait.h>
-// #include "cli_parser.h"
+#include "error_handling.h"
 
 extern char *search_path;
 
@@ -30,28 +30,26 @@ void handle_system_command(char *command, char **argv, char *redirectFileName) {
         command_path = strdup(possible_command_path);
       }
     }
-
     if (command_path[0] == '\0') {
-      fprintf(stderr, "wish: could not find %s command\n", command);
+      print_error(-1);
     } else { 
       if (redirectFileName) {
-      // TODO: difference between opening a file descriptor and opening a file.
+        // TODO: difference between opening a file descriptor and opening a file.
         int fd = open(redirectFileName, O_WRONLY | O_TRUNC);
         if (fd < 0) {
-          perror("wish: an error has ocurred");
+          print_error(fd);
         }
         dup2(fd, 1);
         dup2(fd, 2);
         close(fd);
       }
       
-      int error;
-      if ((error = execv(command_path, argv)) != 0) {
-        perror("wish: an error has ocurred");
+      if (execv(command_path, argv) != 0) {
+        print_error(-1);
       }
     }
   } else {
-    printf("wish: path is not set");
+    print_error(-1);
   }
 }
 
