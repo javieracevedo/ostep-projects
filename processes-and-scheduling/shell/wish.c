@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     if (strcmp(commands[0].command, CD_COMMAND) == 0 || strcmp(commands[0].command, PATH_COMMAND) == 0) {
         int return_code = handle_built_in_command(commands[0].command, commands[0].argc, commands[0].argv);
         print_error(return_code);
-    } else if (strcmp( commands[0].command, EXIT_COMMAND) == 0) { 
+    } else if (strcmp( commands[0].command, EXIT_COMMAND) == 0) {
       // TODO: handle ctrl+c and ctrl+d
       // TODO: is there a way to always ensure we exit trough here (or a single place), so we can free
       // everything we need to free and avoid memory leaks?
