@@ -39,6 +39,7 @@ void handle_system_command(char *command, char **argv, char *redirectFileName) {
         int fd = open(redirectFileName, O_WRONLY | O_TRUNC);
         if (fd < 0) {
           print_error(fd);
+          exit(EXIT_SUCCESS);
           // TODO: should we exit with error here, or exit normally since the error is handled another way?
           // or maybe just we the redirect file name in the outer function?
         }
@@ -71,7 +72,7 @@ void execute_commands(CommandLineInput *commands, int length) {
 
   int rc;
   int status;
-  while ((rc = wait(&status)) != -1) 
+  while ((rc = wait(&status)) != -1)
     if (status != 0)
       print_error(status);
 }
