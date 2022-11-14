@@ -14,6 +14,7 @@ int main(int argc, char *argv[]) {
     while (fgets(buffer, sizeof buffer, file) != NULL)
       printf("%s", buffer);
     
+    printf("\n\n");    
 
     if(ferror(file)) {
       perror("wcat: cannot read content of file");
