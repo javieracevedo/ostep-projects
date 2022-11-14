@@ -16,7 +16,7 @@ char *PATH_COMMAND = "path";
 
 int add_path_entry(char **search_path, char *new_entry, size_t *buffer_size) {
   if (*search_path == NULL) {
-    if((*search_path = calloc(200, sizeof(char))) == NULL) {
+    if((*search_path = calloc(*buffer_size, sizeof(char))) == NULL) {
       // Should we set an error or something here? to be printed with perror
       return -1;
     }

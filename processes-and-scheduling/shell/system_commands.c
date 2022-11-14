@@ -70,6 +70,12 @@ void execute_commands(CommandLineInput *commands, int length) {
     }
   }
 
+  // TODO: maybe try to fix this properly. For now it works fine.
+  if (pid == 0) {
+    printf("Child didn't exit. \n");
+    exit(EXIT_SUCCESS);
+  }
+
   int rc;
   int status;
   while ((rc = wait(&status)) != -1)
