@@ -5,7 +5,6 @@
 
 #include <stdio.h>
 
-// TODO: try to improve/simplify this function's logic
 void trim_spaces(char **string) {
   int leading_spaces_count = 0;
   for (int i=0; (*string)[i] == ' '; i++) leading_spaces_count++;
@@ -19,7 +18,7 @@ void trim_spaces(char **string) {
     int right_idx = leading_spaces_count;
     while ((*string)[right_idx] != '\0') {
       (*string)[left_idx] = (*string)[right_idx];
-      (*string)[right_idx] = ' '; // Maybe we could set to null r-ight away?
+      (*string)[right_idx] = ' ';
       left_idx++;
       right_idx++;
     }
@@ -48,7 +47,6 @@ struct CommandLineInput* parse_command_line(char *command_line, size_t command_l
   }
   commands[count] = NULL;
 
-  // TODO: check the initialization of this, shouldn't this have count amount of structs?
   parsed_commands = calloc(count, sizeof(struct CommandLineInput));
   for (int i=0; i<count; i++) {
     trim_spaces(&commands[i]);
@@ -74,8 +72,7 @@ struct CommandLineInput parse_command(char *command, size_t command_line_length)
     command_line_input.redirectFileName = command;
     trim_spaces(&command_line_input.redirectFileName);
   }
-  
-  // TODO: try to do this only once, outside of this function call. Maybe we could check if we need to do it or not first.
+
   command_line_input.argv = malloc(sysconf(_SC_ARG_MAX));
   while (lhs != NULL) {
     char *token = strsep(&lhs, " ");

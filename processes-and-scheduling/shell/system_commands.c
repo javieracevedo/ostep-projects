@@ -14,9 +14,8 @@ extern char *search_path;
 
 
 void handle_system_command(char *command, char **argv, char *redirectFileName) {
-  if (search_path != NULL || search_path[0] != 0) { // TODO: consider removing this
+  if (search_path != NULL || search_path[0] != 0) {
     char *path_copy = strdup(search_path);
-
     char *token;
     char *command_path = "\0";
 
@@ -35,13 +34,10 @@ void handle_system_command(char *command, char **argv, char *redirectFileName) {
       print_error(-1);
     } else { 
       if (redirectFileName) {
-        // TODO: difference between opening a file descriptor and opening a file.
         int fd = open(redirectFileName, O_WRONLY | O_TRUNC);
         if (fd < 0) {
           print_error(fd);
-          exit(EXIT_SUCCESS);
-          // TODO: should we exit with error here, or exit normally since the error is handled another way?
-          // or maybe just we the redirect file name in the outer function?
+          exit(EXIT_FAILURE);
         }
         dup2(fd, 1);
         dup2(fd, 2);
@@ -70,11 +66,7 @@ void execute_commands(CommandLineInput *commands, int length) {
     }
   }
 
-  // TODO: maybe try to fix this properly. For now it works fine.
-  if (pid == 0) {
-    printf("Child didn't exit. \n");
-    exit(EXIT_SUCCESS);
-  }
+  if (pid == 0) exit(EXIT_SUCCESS);
 
   int rc;
   int status;
