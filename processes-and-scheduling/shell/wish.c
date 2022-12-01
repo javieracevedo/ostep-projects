@@ -28,9 +28,31 @@ int main(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
+  
+  struct CommandLineInput* commands;
+
+  if (argc == 2) {
+    FILE *file;
+    if ((file = fopen(argv[1], "r")) == NULL) {
+      fprintf(stderr, "wish: cannot read file\n");
+      exit(EXIT_FAILURE);
+    }
+    size_t buffer_size = 256;
+    char *buffer = NULL;
+    ssize_t nread;
+
+    while ((nread = getline(&buffer, &buffer_size, file)) != -1) {
+      commands = parse_command_line(buffer, nread);      
+      int commands_count = command_line_input_struct_array_length(commands);
+      execute_commands(commands, commands_count);
+      // TODO: check what happens with echo command
+    }
+
+    exit(EXIT_SUCCESS);
+  }
+
   char *command_line = NULL;
   size_t command_line_buf_size = 100;
-  struct CommandLineInput* commands;
   
   char current_wd_path[256];
   
@@ -63,10 +85,3 @@ int main(int argc, char *argv[]) {
     }
   }
 }
-
-
-// BUGS
-  // #1 - I think this one was fix together with another bug. Will leave here just in case.
-    // wish.out(63472,0x1efebe500) malloc: Incorrect checksum for freed object 0x121e068b8: probably modified after being freed.
-    // Corrupt value: 0x69622f312e34312e
-    // wish.out(63472,0x1efebe500) malloc: *** set a breakpoint in malloc_error_break to debug
