@@ -5,26 +5,27 @@
 
 #include <stdio.h>
 
-void trim_spaces(char **string) {
-  int leading_spaces_count = 0;
-  for (int i=0; (*string)[i] == ' '; i++) leading_spaces_count++;
+char* trim_spaces(const char *string, size_t string_length) {
+  const char *start = string;
+  const char *end = string + string_length - 1;
 
-  int trailing_spaces_count = 0;
-  for (int j=strlen(*string) - 1; (*string)[j] == ' '; j--) trailing_spaces_count++;
-
-  int left_idx = 0;
-
-  if (leading_spaces_count > 0) {
-    int right_idx = leading_spaces_count;
-    while ((*string)[right_idx] != '\0') {
-      (*string)[left_idx] = (*string)[right_idx];
-      (*string)[right_idx] = ' ';
-      left_idx++;
-      right_idx++;
-    }
+  // Skip leading spaces
+  while (start <= end && *start == ' ') {
+    start++;
   }
-  
-  (*string)[strlen(*string) - (leading_spaces_count + trailing_spaces_count)] = '\0';
+
+  // Skip trailing spaces
+  while (end >= start && *end == ' ') {
+    end--;
+  }
+
+  // Allocate a new string and copy the trimmed substring
+  size_t trimmed_length = end - start + 1;
+  char *trimmed_string = malloc(trimmed_length + 1);
+  memcpy(trimmed_string, start, trimmed_length);
+  trimmed_string[trimmed_length] = '\0';
+
+  return trimmed_string;
 }
 
 
@@ -49,8 +50,9 @@ struct CommandLineInput* parse_command_line(char *command_line, size_t command_l
 
   parsed_commands = calloc(count, sizeof(struct CommandLineInput));
   for (int i=0; i<count; i++) {
-    trim_spaces(&commands[i]);
-    parsed_commands[i] = parse_command(commands[i], strlen(commands[i]));
+    size_t command_length = strlen(commands[i]);
+    char *trimmed_command = trim_spaces(commands[i], command_length);
+    parsed_commands[i] = parse_command(trimmed_command, strlen(commands[i]));
   }
 
   return parsed_commands;
@@ -70,7 +72,8 @@ struct CommandLineInput parse_command(char *command, size_t command_line_length)
   // if there is something left in the command line after separating by >, it means there is a RHS, which should be the name of the file to redirec to
   if (command) {
     command_line_input.redirectFileName = command;
-    trim_spaces(&command_line_input.redirectFileName);
+    size_t redirect_file_name_length = strlen(command_line_input.redirectFileName);
+    trim_spaces(command_line_input.redirectFileName, redirect_file_name_length);
   }
 
   command_line_input.argv = malloc(sysconf(_SC_ARG_MAX));
@@ -89,10 +92,16 @@ struct CommandLineInput parse_command(char *command, size_t command_line_length)
 
 
 int command_line_input_struct_array_length(CommandLineInput *struct_array) {
+  if (struct_array == NULL) {
+    printf("struct_array is NULL\n");
+  }
   int count = 0;
   while (struct_array->command != NULL) {
-    struct_array++;
-    count++;
+    // if (struct_array->command != NULL) {¡
+      printf("%s\n", struct_array->command);
+      struct_array++;
+      count++;
+    // }
   }
   return count;
 }

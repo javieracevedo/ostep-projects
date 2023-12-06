@@ -30,9 +30,10 @@ void handle_system_command(char *command, char **argv, char *redirectFileName) {
         command_path = strdup(possible_command_path);
       }
     }
+    
     if (command_path[0] == '\0') {
       print_error(-1);
-    } else { 
+    } else {
       if (redirectFileName) {
         int fd = open(redirectFileName, O_WRONLY | O_TRUNC);
         if (fd < 0) {
@@ -58,7 +59,7 @@ void execute_commands(CommandLineInput *commands, int length) {
   for (int i=0; i<length; i++) {
     // Fork again, only if process is the parent (pid != 0)
     if (pid != 0) {
-      pid = fork(); 
+      pid = fork();
       // Attempt to execute sys command, only if process is a child (pid == 0)
       if (pid == 0) {
         handle_system_command(commands[i].command, commands[i].argv, commands[i].redirectFileName);

@@ -7,7 +7,7 @@ typedef struct CommandLineInput {
   char *redirectFileName;
 } CommandLineInput;
 
-void trim_spaces(char **string);
+char* trim_spaces(const char *string, size_t string_length);
 
 struct CommandLineInput* parse_command_line(char *command_line, size_t command_line_length);
 struct CommandLineInput parse_command(char *command_line, size_t command_line_length);
