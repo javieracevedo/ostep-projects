@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "string.h": "c",
+        "built_in_commands.h": "c",
+        "stdio.h": "c",
+        "config.h": "c",
+        "unistd.h": "c",
+        "error_handling.h": "c",
+        "system_commands.h": "c",
+        "cli_parser.h": "c",
+        "signal.h": "c",
+        "stat.h": "c",
+        "stdlib.h": "c",
+        "utils.h": "c"
+    }
+}

@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include "error_handling.h"
+#include "cli_parser.h"
 
 extern char *search_path;
 

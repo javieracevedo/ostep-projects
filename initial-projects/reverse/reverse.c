@@ -5,7 +5,41 @@
 #include "linked_list_lib.h"
 
 
+unsigned int foo(unsigned int n, unsigned int r)
+{
+    if (n > 0)
+        return (n % r + foo(n / r, r));
+    else
+        return 0;
+}
+
+// int fun(int x, int y) 
+// {
+//   if (x == 0)
+//     return y;
+//   return fun(x - 1,  x + y);
+// } 
+
+
+int fun(int n){
+  int x = 1, k;
+  if (n == 1) 
+    return x;
+  for (k = 1; k < n; ++k)
+     x = x + fun(k) * fun(n - k);
+  return x;
+}
+
+
+
+
 int main(int argc, char *argv[]) {
+
+  int a = fun(4);
+
+  printf("%d\n", a);
+  exit(1);
+
   if (argc >= 4) {
     fprintf(stderr, "usage: reverse <input> <output>\n");
     exit(EXIT_FAILURE);
