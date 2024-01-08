@@ -66,6 +66,30 @@ void print_directory(struct Config cli_config) {
   reset_cli_color();
 }
 
+void print_directory_array(char *directory_color) {
+  char current_wd_path[256];
+  char *cwd = getcwd(current_wd_path, 256);
+  char *last_dir = get_last_dir_name(cwd);
+
+  if (directory_color == NULL) {
+    printf("%s ", last_dir);
+    return;
+  }
+
+  if (strcasecmp(directory_color, "#00FF00\n") == 0) {
+    set_cli_color_green();
+  } else if (strcasecmp(directory_color, "#0000FF\n") == 0) {
+    set_cli_color_blue();
+  } else if (strcasecmp(directory_color, "#FFFFFF\n") == 0) {
+    set_cli_color_white();
+  } else if (strcasecmp(directory_color, "#FF0000\n") == 0) {
+    set_cli_color_red();
+  }
+
+  printf("%s ", last_dir);
+  reset_cli_color();
+}
+
 void print_prompt(struct Config cli_config) {
   if (cli_config.PROMPT_COLOR == NULL) {
     printf(">> ");
@@ -79,6 +103,28 @@ void print_prompt(struct Config cli_config) {
   } else if (strcasecmp(cli_config.PROMPT_COLOR, "#FFFFFF\n") == 0) {
     set_cli_color_white();
   } else if (strcasecmp(cli_config.PROMPT_COLOR, "#FF0000\n") == 0) {
+    set_cli_color_red();
+  } else {
+    reset_cli_color();
+  }
+
+  printf(">> ");
+  reset_cli_color();
+}
+
+void print_prompt_array(char *prompt_array) {
+  if (prompt_array == NULL) {
+    printf(">> ");
+    return;
+  }
+  
+  if (strcasecmp(prompt_array, "#00FF00\n") == 0) {
+    set_cli_color_green();
+  } else if (strcasecmp(prompt_array, "#0000FF\n") == 0) {
+    set_cli_color_blue();
+  } else if (strcasecmp(prompt_array, "#FFFFFF\n") == 0) {
+    set_cli_color_white();
+  } else if (strcasecmp(prompt_array, "#FF0000\n") == 0) {
     set_cli_color_red();
   } else {
     reset_cli_color();
